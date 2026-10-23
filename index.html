@@ -16,6 +16,7 @@
   --sheet:#ffffff; --ok:#56c48f; --warn:#f0b54a; --warn-bg:#2a2210; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+#sig,#sig *{box-sizing:content-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.5}
 .top{background:var(--navy);color:#fff;padding-block:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -114,7 +115,7 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
       <h2>Before you copy</h2>
       <details open><summary>1. Check every detail in the preview</summary><ol><li>Name and title spelt exactly as on your business card.</li><li>Tap each phone number, the email and the social icons in your test email to confirm they open the right place.</li></ol></details>
       <details id="tilebox"><summary>2. Using a photo with Gmail</summary>
-        <ol><li>Gmail removes photos that are not stored online. Right-click your framed photo below and choose <b>Save image as</b>.</li><li>Send it to the brand team to upload to the DS Travels image host, or upload it yourself.</li><li>Paste the photo's web link into <b>Hosted photo link</b>. Outlook and Apple Mail users can skip this step.</li></ol>
+        <ol><li>Gmail removes photos that are not stored online. Right-click your framed photo below and choose <b>Save image as</b>.</li><li>Send it to the brand team. They add it to the DS Travels GitHub folder as <code>team-firstname-lastname.png</code>.</li><li>Paste its link into <b>Hosted photo link</b>: <code>https://raw.githubusercontent.com/cdanielkatchy-afk/ds-travels-email-assets./gh-pages/assets/team-firstname-lastname.png</code>. Outlook and Apple Mail users, and anyone using <b>Download as image</b>, can skip this step.</li></ol>
         <div class="tile"><img id="tileimg" alt="Your framed photo, ready to save">Your framed photo</div>
       </details>
     </div>
@@ -132,7 +133,7 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
       <h2>Brand team settings</h2>
       <div class="host">
         <label for="host">Image host address <small>All logos and icons load from here in recipients' inboxes. It must be public.</small><input id="host" type="url"></label>
-        <p style="margin:0;font-size:13px;color:var(--muted)">Upload the files in this generator's <code>assets/</code> folder to a public web address (for example the DS Travels website), then enter that folder's address here. Until then the images load from this page's own address, which works only while the page is shared publicly.</p>
+        <p style="margin:0;font-size:13px;color:var(--muted)">Every signature loads its images from the public DS Travels GitHub folder, so recipients always see them. Change this only if the images move to another public address, such as the DS Travels website.</p>
         <label for="code">Signature HTML<textarea id="code" readonly></textarea></label>
       </div>
     </div>
@@ -153,9 +154,11 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
   const MAPS = 'https://maps.google.com/?q=54+Diya+Street,+Gbagada,+Lagos';
   let withPhoto = true, photoImg = null, tileData = '';
 
-  const defaultHost = new URL('assets/', document.baseURI).href;
+  const PUBLIC_HOST = 'https://raw.githubusercontent.com/cdanielkatchy-afk/ds-travels-email-assets./gh-pages/assets/';
+  const LOCAL_HOST = new URL('assets/', document.baseURI).href;
+  const defaultHost = PUBLIC_HOST;
   function host(){ let h = ($('host').value || defaultHost).trim(); if(!h.endsWith('/')) h += '/'; return h; }
-  try { const saved = localStorage.getItem('ds-sig-host'); if(saved) $('host').value = saved; } catch(e){}
+  try { const saved = localStorage.getItem('ds-sig-host-v2'); if(saved) $('host').value = saved; } catch(e){}
   if(!$('host').value) $('host').value = defaultHost;
 
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -163,7 +166,7 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
   function intl(n){ let d = digits(n); if(!d) return ''; if(d.startsWith('0')) d = '234' + d.slice(1); return d; }
 
   // Framed photo tile: carries the blue panel edge and the white border so the photo overlaps the panel in every inbox.
-  const patternImg = new Image(); patternImg.src = host() + 'panel-pattern.png'; patternImg.crossOrigin = 'anonymous';
+  const patternImg = new Image(); patternImg.src = LOCAL_HOST + 'panel-pattern.png'; patternImg.crossOrigin = 'anonymous';
   function makeTile(){
     if(!photoImg){ tileData = ''; return; }
     const c = document.createElement('canvas'); c.width = 256; c.height = 440; const x = c.getContext('2d');
@@ -178,19 +181,19 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
     tileData = c.toDataURL('image/png');
   }
 
-  function build(){
-    const H = host();
+  function build(forEmail){
+    const H = forEmail ? host() : LOCAL_HOST;
     const name = $('name').value.trim() || 'Your Name';
     const parts = name.split(/\s+/); const nameHtml = parts.length > 1 ? esc(parts[0]) + '<br>' + esc(parts.slice(1).join(' ')) : esc(name);
     const title = $('title').value.trim();
     const wa = $('wa').value.trim(), ph = $('phone').value.trim(), em = $('email').value.trim();
     const usePhoto = withPhoto && (tileData || $('photourl').value.trim());
-    const tileSrc = $('photourl').value.trim() || tileData;
-    const panelW = usePhoto ? 176 : 236;
+    const tileSrc = forEmail ? ($('photourl').value.trim() || tileData) : (tileData || $('photourl').value.trim());
+    const panelW = usePhoto ? 176 : 236; const panelInner = panelW - 36;
     const F = "font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;";
-    const icon = (n,href,text) => `<tr><td style="padding:0 0 9px 0;vertical-align:middle;width:23px"><img src="${H}icon-${n}.png" width="15" height="15" alt="" style="display:block;border:0"></td><td style="padding:0 0 9px 0;vertical-align:middle;${F}font-size:13px;line-height:16px;color:#333333"><a href="${href}" style="color:#333333;text-decoration:none">${esc(text)}</a></td></tr>`;
+    const icon = (n,href,text) => `<tr><td width="15" style="padding:0 8px 9px 0;vertical-align:middle;width:15px"><img src="${H}icon-${n}.png" width="15" height="15" alt="" style="display:block;border:0"></td><td style="padding:0 0 9px 0;vertical-align:middle;${F}font-size:13px;line-height:16px;color:#333333"><a href="${href}" style="color:#333333;text-decoration:none">${esc(text)}</a></td></tr>`;
     let contacts = '';
-    if(wa){ contacts += `<tr><td style="padding:0 0 9px 0;vertical-align:middle;width:23px"><img src="${H}icon-whatsapp-business.png" width="15" height="15" alt="WhatsApp" style="display:block;border:0"></td><td style="padding:0 0 9px 0;vertical-align:middle;${F}font-size:13px;line-height:16px;color:#333333"><a href="https://wa.me/${intl(wa)}" style="color:#333333;text-decoration:none">${esc(wa)}</a>`
+    if(wa){ contacts += `<tr><td width="15" style="padding:0 8px 9px 0;vertical-align:middle;width:15px"><img src="${H}icon-whatsapp-business.png" width="15" height="15" alt="WhatsApp" style="display:block;border:0"></td><td style="padding:0 0 9px 0;vertical-align:middle;${F}font-size:13px;line-height:16px;color:#333333"><a href="https://wa.me/${intl(wa)}" style="color:#333333;text-decoration:none">${esc(wa)}</a>`
       + (ph ? `&nbsp;&nbsp;&nbsp;<img src="${H}icon-phone.png" width="15" height="15" alt="Phone" style="vertical-align:-3px;border:0">&nbsp;&nbsp;<a href="tel:+${intl(ph)}" style="color:#333333;text-decoration:none">${esc(ph)}</a>` : '') + `</td></tr>`; }
     else if(ph){ contacts += icon('phone','tel:+'+intl(ph),ph); }
     if(em) contacts += icon('email','mailto:'+em,em);
@@ -199,7 +202,7 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
     const logoW = usePhoto ? 120 : 162, logoH = usePhoto ? 40 : 54;
     return `<table cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;border-collapse:collapse;background:#ffffff;${F}">
 <tr>
-<td width="${panelW}" height="220" valign="top" bgcolor="#0d3b8c" background="${H}panel-pattern.png" style="width:${panelW}px;height:220px;background:#0d3b8c url('${H}panel-pattern.png') no-repeat left top;padding:24px 12px 14px 24px;vertical-align:top">
+<td width="${panelInner}" height="182" valign="top" bgcolor="#0d3b8c" background="${H}panel-pattern.png" style="width:${panelInner}px;height:182px;background:#0d3b8c url('${H}panel-pattern.png') no-repeat left top;padding:24px 12px 14px 24px;vertical-align:top">
 <div style="${F}font-size:19px;line-height:22px;font-weight:bold;color:#ffffff">${nameHtml}</div>
 <div style="${F}font-size:12px;line-height:16px;color:#aabcee;padding-top:6px">${esc(title)}</div>
 <table cellpadding="0" cellspacing="0" border="0" style="margin-top:12px"><tr><td width="28" height="3" bgcolor="#d0011a" style="width:28px;height:3px;font-size:0;line-height:0;background:#d0011a">&nbsp;</td></tr></table>
@@ -217,8 +220,7 @@ ${usePhoto ? `<td width="128" valign="top" style="width:128px;padding:0;vertical
   }
 
   function render(){
-    const html = build();
-    $('sig').innerHTML = html; $('code').value = html;
+    $('sig').innerHTML = build(false); $('code').value = build(true);
     const needHost = withPhoto && tileData && !$('photourl').value.trim();
     $('warn').hidden = !needHost;
     $('warn').textContent = needHost ? 'Your photo is not online yet, so Gmail will remove it when you paste. Outlook and Apple Mail keep it. To use it in Gmail, follow step 2 under "Before you copy".' : '';
@@ -231,23 +233,26 @@ ${usePhoto ? `<td width="128" valign="top" style="width:128px;padding:0;vertical
   $('v-photo').addEventListener('click', () => setVersion(true));
   $('v-nophoto').addEventListener('click', () => setVersion(false));
   ['name','title','wa','phone','email','photourl'].forEach(id => $(id).addEventListener('input', render));
-  $('host').addEventListener('change', () => { try{ localStorage.setItem('ds-sig-host', $('host').value.trim()); }catch(e){} patternImg.src = host()+'panel-pattern.png'; render(); });
+  $('host').addEventListener('change', () => { try{ localStorage.setItem('ds-sig-host-v2', $('host').value.trim()); }catch(e){} render(); });
   $('form').addEventListener('submit', e => e.preventDefault());
 
   function loadPhoto(src){ const im = new Image(); im.onload = () => { photoImg = im; $('thumb').src = src; makeTile(); render(); }; im.src = src; }
-  $('photo').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = () => loadPhoto(r.result); r.readAsDataURL(f); });
+  $('photo').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = () => { $('photourl').value = ''; loadPhoto(r.result); }; r.readAsDataURL(f); });
   patternImg.onload = () => { makeTile(); render(); };
 
   function say(t){ $('status').textContent = t; setTimeout(() => { if($('status').textContent === t) $('status').textContent = ''; }, 4000); }
   $('copy').addEventListener('click', async () => {
-    const html = build();
+    const html = build(true);
     try {
       if(!window.ClipboardItem) throw 0;
       await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([html],{type:'text/html'}), 'text/plain': new Blob([$('sig').innerText],{type:'text/plain'})})]);
       say('Copied. Paste it into your email signature settings.');
     } catch(e){
-      const r = document.createRange(); r.selectNodeContents($('sig')); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      const tmp = document.createElement('div'); tmp.style.cssText = 'position:fixed;left:-9999px;top:0'; tmp.innerHTML = html; document.body.appendChild(tmp);
+      const r = document.createRange(); r.selectNodeContents(tmp); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
       let ok = false; try { ok = document.execCommand('copy'); } catch(_){}
+      s.removeAllRanges(); tmp.remove();
+      if(!ok){ const r2 = document.createRange(); r2.selectNodeContents($('sig')); s.addRange(r2); }
       say(ok ? 'Copied. Paste it into your email signature settings.' : 'Your signature is selected. Press Ctrl+C (Cmd+C on Mac) to copy it.');
     }
   });
@@ -297,13 +302,13 @@ ${usePhoto ? `<td width="128" valign="top" style="width:128px;padding:0;vertical
   });
 
   $('copyhtml').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(build()); say('HTML code copied.'); }
+    try { await navigator.clipboard.writeText(build(true)); say('HTML code copied.'); }
     catch(e){ $('code').focus(); $('code').select(); say('Code selected. Press Ctrl+C (Cmd+C on Mac) to copy it.'); }
   });
 
   // Start with Erdoo's approved headshot so the first view shows the finished signature.
   loadPhoto('assets/sample-headshot.jpg');
-  if(/github\.io$/.test(location.hostname) && !$('photourl').value){ $('photourl').value = host() + 'team-erdoo-oshoma.png'; }
+  $('photourl').value = PUBLIC_HOST + 'team-erdoo-oshoma.png';
   render();
 })();
 </script>
