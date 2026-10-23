@@ -1,0 +1,309 @@
+<title>DS Travels Signature Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: two-pane studio. Form on the left, the live email signature on a white "inbox" sheet on the right; stacks on phones. */
+:root{
+  --navy:#072666; --blue:#0d3b8c; --blue-2:#1952b4; --red:#d0011a; --sky:#aabcee;
+  --bg:#f3f5fa; --surface:#ffffff; --fg:#121a33; --muted:#5b6585; --line:#dde2ee; --field:#ffffff;
+  --sheet:#ffffff; --ok:#1f7a4d; --warn:#9a5b00; --warn-bg:#fff5e0;
+  --font:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1020; --surface:#141b33; --fg:#e8ecf7; --muted:#9aa5c6; --line:#27304f; --field:#0f1529;
+  --sheet:#ffffff; --ok:#56c48f; --warn:#f0b54a; --warn-bg:#2a2210; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1020; --surface:#141b33; --fg:#e8ecf7; --muted:#9aa5c6; --line:#27304f; --field:#0f1529;
+  --sheet:#ffffff; --ok:#56c48f; --warn:#f0b54a; --warn-bg:#2a2210; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.5}
+.top{background:var(--navy);color:#fff;padding-block:18px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top h1{margin:0;font-size:20px;letter-spacing:.2px}
+.top p{margin:0;color:var(--sky);font-size:13px}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(255,255,255,.14)}
+.wrap{max-width:1180px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;min-width:0}
+.panel h2{margin:0 0 14px;font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+form{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+label{display:grid;gap:5px;font-size:13px;font-weight:600}
+label small{font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=tel],input[type=url]{font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:7px;background:var(--field);color:var(--fg);width:100%}
+input:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--blue-2);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:420px){.row2{grid-template-columns:1fr}}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:14px;padding:9px;border:0;background:var(--field);color:var(--fg);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.drop{border:1.5px dashed var(--line);border-radius:8px;padding:12px;display:flex;gap:12px;align-items:center}
+.drop img{width:52px;height:60px;object-fit:cover;border-radius:6px;background:var(--bg)}
+.drop .txt{font-size:13px;color:var(--muted);min-width:0}
+.file{font:inherit;font-size:13px;max-width:100%;min-width:0;width:100%}
+label{min-width:0}
+.preview{display:grid;gap:16px;min-width:0}
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:22px;overflow-x:auto}
+.mailhead{font-family:var(--font);font-size:13px;color:#5b6585;border-bottom:1px solid #e6e9f2;padding-bottom:12px;margin-bottom:18px}
+.mailhead b{color:#121a33}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:inherit;font-size:14px;font-weight:600;padding:11px 16px;border-radius:8px;border:1px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn:hover{filter:brightness(1.08)}
+.status{font-size:13px;min-height:20px;color:var(--ok)}
+.note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:13px}
+details{border-top:1px solid var(--line);padding-block:10px}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:600;font-size:14px}
+details ol{margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--fg)}
+details li{margin-bottom:4px}
+code{font-size:12.5px;background:var(--bg);padding:1px 5px;border-radius:4px;word-break:break-all}
+.host{display:grid;gap:8px}
+.tile{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.tile img{width:64px;height:110px;border:1px solid var(--line);border-radius:6px;background:#fff}
+textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:7px;padding:8px;background:var(--field);color:var(--fg)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="top"><div class="top-in"><span class="dot" aria-hidden="true"></span><div><h1>DS Travels Signature Studio</h1><p>Fill in your details, check the preview, then copy your signature into Gmail or Outlook.</p></div></div></header>
+
+<main class="wrap">
+  <section class="panel" aria-labelledby="f-h">
+    <h2 id="f-h">Your details</h2>
+    <form id="form" autocomplete="on">
+      <label for="name">Full name<input id="name" type="text" value="Erdoo Oshoma" required></label>
+      <label for="title">Job title<input id="title" type="text" value="CEO &amp; Founder" required></label>
+      <div class="row2">
+        <label for="wa">WhatsApp number<input id="wa" type="tel" value="09043340466" inputmode="tel"></label>
+        <label for="phone"><span>Phone <small style="display:inline">(optional)</small></span><input id="phone" type="tel" value="08037751726" inputmode="tel"></label>
+      </div>
+      <label for="email">Work email<input id="email" type="email" value="info.dstravelsng@gmail.com"></label>
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:5px" id="ver-l">Version</div>
+        <div class="seg" role="group" aria-labelledby="ver-l">
+          <button type="button" id="v-photo" aria-pressed="true">With photo</button>
+          <button type="button" id="v-nophoto" aria-pressed="false">Without photo</button>
+        </div>
+      </div>
+      <div id="photo-box" class="drop">
+        <img id="thumb" alt="Your photo">
+        <div class="txt"><label for="photo" style="font-weight:600;color:var(--fg)">Headshot<input id="photo" class="file" type="file" accept="image/*"></label>Head and shoulders, plain background. We frame it for you.</div>
+      </div>
+      <label for="photourl" id="photourl-l">Hosted photo link <small>(needed for Gmail, see step 2 under "Before you copy")</small><input id="photourl" type="url" placeholder="https://.../your-photo-tile.png"></label>
+    </form>
+  </section>
+
+  <section class="preview" aria-labelledby="p-h">
+    <div class="panel">
+      <h2 id="p-h">Live preview</h2>
+      <div class="sheet"><div class="mailhead"><b>Your next email</b> &middot; this is exactly what recipients will see</div><div id="sig"></div></div>
+      <div class="actions" style="margin-top:16px">
+        <button class="btn" type="button" id="copy">Copy signature</button>
+        <button class="btn" type="button" id="dlimg" style="background:var(--red);border-color:var(--red)">Download as image</button>
+        <button class="btn ghost" type="button" id="copyhtml">Copy HTML code</button>
+        <span class="status" id="status" role="status" aria-live="polite"></span>
+      </div>
+      <p id="warn" class="note" hidden></p>
+      <div id="imgout" hidden style="margin-top:16px;display:grid;gap:10px">
+        <p style="margin:0;font-size:14px"><b>Your signature image is ready.</b> If it did not download automatically, right-click the image below and choose <b>Save image as</b> (on a phone, press and hold it).</p>
+        <img id="sigpng" alt="Your email signature as an image" style="width:600px;max-width:100%;border:1px solid var(--line);border-radius:6px;background:#fff">
+        <p class="note" style="margin:0">An image signature is the quickest Gmail setup, but its phone numbers, email and social icons cannot be clicked one by one. For clickable links, use <b>Copy signature</b> instead.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Before you copy</h2>
+      <details open><summary>1. Check every detail in the preview</summary><ol><li>Name and title spelt exactly as on your business card.</li><li>Tap each phone number, the email and the social icons in your test email to confirm they open the right place.</li></ol></details>
+      <details id="tilebox"><summary>2. Using a photo with Gmail</summary>
+        <ol><li>Gmail removes photos that are not stored online. Right-click your framed photo below and choose <b>Save image as</b>.</li><li>Send it to the brand team to upload to the DS Travels image host, or upload it yourself.</li><li>Paste the photo's web link into <b>Hosted photo link</b>. Outlook and Apple Mail users can skip this step.</li></ol>
+        <div class="tile"><img id="tileimg" alt="Your framed photo, ready to save">Your framed photo</div>
+      </details>
+    </div>
+
+    <div class="panel">
+      <h2>Install it</h2>
+      <details open><summary>Gmail (web)</summary><ol><li>Click <b>Copy signature</b> above.</li><li>In Gmail open <b>Settings (gear) &rsaquo; See all settings &rsaquo; General &rsaquo; Signature</b>.</li><li>Click <b>Create new</b>, name it "DS Travels", click into the box and paste (Ctrl+V or Cmd+V).</li><li>Set it as default for new emails and replies, then <b>Save changes</b> at the bottom.</li></ol></details>
+      <details><summary>Gmail with the downloaded image</summary><ol><li>Click <b>Download as image</b> and save the PNG to your computer.</li><li>In Gmail open <b>Settings (gear) &rsaquo; See all settings &rsaquo; General &rsaquo; Signature &rsaquo; Create new</b>.</li><li>Click the <b>Insert image</b> icon in the signature toolbar, choose <b>Upload</b>, and select your PNG.</li><li>Click the image and choose <b>Original size</b> so it shows at 600 pixels wide.</li><li>Optional: select the image, click the link icon and enter the DS Travels Instagram page, so a tap on the signature opens it.</li><li>Set it as default for new emails and replies, then <b>Save changes</b>.</li></ol></details>
+      <details><summary>Outlook (web and new Outlook)</summary><ol><li>Click <b>Copy signature</b>.</li><li>Open <b>Settings &rsaquo; Accounts &rsaquo; Signatures &rsaquo; New signature</b>.</li><li>Paste into the editor, choose it as default for new messages and replies, then <b>Save</b>.</li></ol></details>
+      <details><summary>Outlook (classic desktop)</summary><ol><li>Click <b>Copy signature</b>.</li><li>Go to <b>File &rsaquo; Options &rsaquo; Mail &rsaquo; Signatures &rsaquo; New</b>.</li><li>Paste into the edit box, pick defaults on the right, then <b>OK</b>.</li></ol></details>
+      <details><summary>Apple Mail and iPhone</summary><ol><li>Mac: <b>Mail &rsaquo; Settings &rsaquo; Signatures &rsaquo; +</b>, untick "Always match my default message font", paste.</li><li>iPhone: send yourself an email containing the signature, then copy it into <b>Settings &rsaquo; Mail &rsaquo; Signature</b>.</li></ol></details>
+    </div>
+
+    <div class="panel">
+      <h2>Brand team settings</h2>
+      <div class="host">
+        <label for="host">Image host address <small>All logos and icons load from here in recipients' inboxes. It must be public.</small><input id="host" type="url"></label>
+        <p style="margin:0;font-size:13px;color:var(--muted)">Upload the files in this generator's <code>assets/</code> folder to a public web address (for example the DS Travels website), then enter that folder's address here. Until then the images load from this page's own address, which works only while the page is shared publicly.</p>
+        <label for="code">Signature HTML<textarea id="code" readonly></textarea></label>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const SOCIAL = [
+    ['instagram','Instagram','https://www.instagram.com/dstravels_ng'],
+    ['tiktok','TikTok','https://www.tiktok.com/@dstravels_ng'],
+    ['facebook','Facebook','https://www.facebook.com/profile.php?id=100063550392564'],
+    ['linkedin','LinkedIn','https://www.linkedin.com/company/linkedin-ds-travels'],
+    ['youtube','YouTube','https://www.youtube.com/@DSTravelsWithErdoo']
+  ];
+  const ADDRESS = '54 Diya St, Gbagada, Lagos';
+  const MAPS = 'https://maps.google.com/?q=54+Diya+Street,+Gbagada,+Lagos';
+  let withPhoto = true, photoImg = null, tileData = '';
+
+  const defaultHost = new URL('assets/', document.baseURI).href;
+  function host(){ let h = ($('host').value || defaultHost).trim(); if(!h.endsWith('/')) h += '/'; return h; }
+  try { const saved = localStorage.getItem('ds-sig-host'); if(saved) $('host').value = saved; } catch(e){}
+  if(!$('host').value) $('host').value = defaultHost;
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const digits = s => String(s||'').replace(/\D/g,'');
+  function intl(n){ let d = digits(n); if(!d) return ''; if(d.startsWith('0')) d = '234' + d.slice(1); return d; }
+
+  // Framed photo tile: carries the blue panel edge and the white border so the photo overlaps the panel in every inbox.
+  const patternImg = new Image(); patternImg.src = host() + 'panel-pattern.png'; patternImg.crossOrigin = 'anonymous';
+  function makeTile(){
+    if(!photoImg){ tileData = ''; return; }
+    const c = document.createElement('canvas'); c.width = 256; c.height = 440; const x = c.getContext('2d');
+    x.fillStyle = '#ffffff'; x.fillRect(0,0,256,440);
+    x.fillStyle = '#0d3b8c'; x.fillRect(0,0,120,440);
+    try { if(patternImg.complete && patternImg.naturalWidth) x.drawImage(patternImg, 176, 0, 60, 220, 0, 0, 120, 440); } catch(e){}
+    const rr = (X,Y,W,H,R)=>{ x.beginPath(); x.moveTo(X+R,Y); x.arcTo(X+W,Y,X+W,Y+H,R); x.arcTo(X+W,Y+H,X,Y+H,R); x.arcTo(X,Y+H,X,Y,R); x.arcTo(X,Y,X+W,Y,R); x.closePath(); };
+    x.fillStyle = '#ffffff'; rr(0,80,256,296,22); x.fill();
+    x.save(); rr(8,88,240,280,16); x.clip();
+    const s = Math.max(240/photoImg.width, 280/photoImg.height), w = photoImg.width*s, h = photoImg.height*s;
+    x.drawImage(photoImg, 8+(240-w)/2, 88+(280-h)/2 - (h-280)*0.15, w, h); x.restore();
+    tileData = c.toDataURL('image/png');
+  }
+
+  function build(){
+    const H = host();
+    const name = $('name').value.trim() || 'Your Name';
+    const parts = name.split(/\s+/); const nameHtml = parts.length > 1 ? esc(parts[0]) + '<br>' + esc(parts.slice(1).join(' ')) : esc(name);
+    const title = $('title').value.trim();
+    const wa = $('wa').value.trim(), ph = $('phone').value.trim(), em = $('email').value.trim();
+    const usePhoto = withPhoto && (tileData || $('photourl').value.trim());
+    const tileSrc = $('photourl').value.trim() || tileData;
+    const panelW = usePhoto ? 176 : 236;
+    const F = "font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;";
+    const icon = (n,href,text) => `<tr><td style="padding:0 0 9px 0;vertical-align:middle;width:23px"><img src="${H}icon-${n}.png" width="15" height="15" alt="" style="display:block;border:0"></td><td style="padding:0 0 9px 0;vertical-align:middle;${F}font-size:13px;line-height:16px;color:#333333"><a href="${href}" style="color:#333333;text-decoration:none">${esc(text)}</a></td></tr>`;
+    let contacts = '';
+    if(wa){ contacts += `<tr><td style="padding:0 0 9px 0;vertical-align:middle;width:23px"><img src="${H}icon-whatsapp-business.png" width="15" height="15" alt="WhatsApp" style="display:block;border:0"></td><td style="padding:0 0 9px 0;vertical-align:middle;${F}font-size:13px;line-height:16px;color:#333333"><a href="https://wa.me/${intl(wa)}" style="color:#333333;text-decoration:none">${esc(wa)}</a>`
+      + (ph ? `&nbsp;&nbsp;&nbsp;<img src="${H}icon-phone.png" width="15" height="15" alt="Phone" style="vertical-align:-3px;border:0">&nbsp;&nbsp;<a href="tel:+${intl(ph)}" style="color:#333333;text-decoration:none">${esc(ph)}</a>` : '') + `</td></tr>`; }
+    else if(ph){ contacts += icon('phone','tel:+'+intl(ph),ph); }
+    if(em) contacts += icon('email','mailto:'+em,em);
+    contacts += icon('address',MAPS,ADDRESS);
+    const socials = SOCIAL.map(([k,l,u]) => `<td style="padding:0 8px 0 0"><a href="${u}"><img src="${H}social-${k}.png" width="17" height="17" alt="${l}" style="display:block;border:0"></a></td>`).join('');
+    const logoW = usePhoto ? 120 : 162, logoH = usePhoto ? 40 : 54;
+    return `<table cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;border-collapse:collapse;background:#ffffff;${F}">
+<tr>
+<td width="${panelW}" height="220" valign="top" bgcolor="#0d3b8c" background="${H}panel-pattern.png" style="width:${panelW}px;height:220px;background:#0d3b8c url('${H}panel-pattern.png') no-repeat left top;padding:24px 12px 14px 24px;vertical-align:top">
+<div style="${F}font-size:19px;line-height:22px;font-weight:bold;color:#ffffff">${nameHtml}</div>
+<div style="${F}font-size:12px;line-height:16px;color:#aabcee;padding-top:6px">${esc(title)}</div>
+<table cellpadding="0" cellspacing="0" border="0" style="margin-top:12px"><tr><td width="28" height="3" bgcolor="#d0011a" style="width:28px;height:3px;font-size:0;line-height:0;background:#d0011a">&nbsp;</td></tr></table>
+<img src="${H}ten-years-white.png" width="98" height="32" alt="10 Years of Exploration" style="display:block;border:0;margin-top:18px">
+<div style="${F}font-size:9.5px;line-height:11px;font-weight:bold;letter-spacing:1.6px;color:#aabcee;padding-top:12px">FOLLOW US</div>
+<table cellpadding="0" cellspacing="0" border="0" style="margin-top:6px"><tr>${socials}</tr></table>
+</td>
+${usePhoto ? `<td width="128" valign="top" style="width:128px;padding:0;vertical-align:top;background:#ffffff"><img src="${esc(tileSrc)}" width="128" height="220" alt="${esc(name)}" style="display:block;border:0;width:128px;height:220px"></td>` : ''}
+<td valign="top" style="vertical-align:top;padding:${usePhoto ? '24px 24px 18px 16px' : '24px 28px 22px 36px'};background:#ffffff">
+<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="${usePhoto ? 'right' : 'left'}"><img src="${H}ds-logo.png" width="${logoW}" height="${logoH}" alt="DS Travels" style="display:block;border:0;${usePhoto ? 'margin-left:auto' : ''}"></td></tr></table>
+<table cellpadding="0" cellspacing="0" border="0" style="margin-top:${usePhoto ? 24 : 40}px">${contacts}</table>
+</td>
+</tr>
+</table>`;
+  }
+
+  function render(){
+    const html = build();
+    $('sig').innerHTML = html; $('code').value = html;
+    const needHost = withPhoto && tileData && !$('photourl').value.trim();
+    $('warn').hidden = !needHost;
+    $('warn').textContent = needHost ? 'Your photo is not online yet, so Gmail will remove it when you paste. Outlook and Apple Mail keep it. To use it in Gmail, follow step 2 under "Before you copy".' : '';
+    $('tileimg').src = tileData || ''; $('tilebox').hidden = !withPhoto;
+    $('photo-box').hidden = !withPhoto; $('photourl-l').hidden = !withPhoto;
+    $('thumb').hidden = !photoImg;
+  }
+
+  function setVersion(p){ withPhoto = p; $('v-photo').setAttribute('aria-pressed', p); $('v-nophoto').setAttribute('aria-pressed', !p); render(); }
+  $('v-photo').addEventListener('click', () => setVersion(true));
+  $('v-nophoto').addEventListener('click', () => setVersion(false));
+  ['name','title','wa','phone','email','photourl'].forEach(id => $(id).addEventListener('input', render));
+  $('host').addEventListener('change', () => { try{ localStorage.setItem('ds-sig-host', $('host').value.trim()); }catch(e){} patternImg.src = host()+'panel-pattern.png'; render(); });
+  $('form').addEventListener('submit', e => e.preventDefault());
+
+  function loadPhoto(src){ const im = new Image(); im.onload = () => { photoImg = im; $('thumb').src = src; makeTile(); render(); }; im.src = src; }
+  $('photo').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = () => loadPhoto(r.result); r.readAsDataURL(f); });
+  patternImg.onload = () => { makeTile(); render(); };
+
+  function say(t){ $('status').textContent = t; setTimeout(() => { if($('status').textContent === t) $('status').textContent = ''; }, 4000); }
+  $('copy').addEventListener('click', async () => {
+    const html = build();
+    try {
+      if(!window.ClipboardItem) throw 0;
+      await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([html],{type:'text/html'}), 'text/plain': new Blob([$('sig').innerText],{type:'text/plain'})})]);
+      say('Copied. Paste it into your email signature settings.');
+    } catch(e){
+      const r = document.createRange(); r.selectNodeContents($('sig')); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      let ok = false; try { ok = document.execCommand('copy'); } catch(_){}
+      say(ok ? 'Copied. Paste it into your email signature settings.' : 'Your signature is selected. Press Ctrl+C (Cmd+C on Mac) to copy it.');
+    }
+  });
+  // Draw the live preview onto a canvas, element by element, at its exact on-screen positions.
+  function loadImg(src){ return new Promise(res => { const im = new Image(); if(!src.startsWith('data:')) im.crossOrigin = 'anonymous'; im.onload = () => res(im); im.onerror = () => res(null); im.src = src; }); }
+  async function signaturePNG(scale){
+    const root = $('sig').querySelector('table'); const O = root.getBoundingClientRect();
+    const c = document.createElement('canvas'); c.width = Math.round(O.width*scale); c.height = Math.round(O.height*scale);
+    const x = c.getContext('2d'); x.scale(scale, scale); x.fillStyle = '#ffffff'; x.fillRect(0,0,O.width,O.height);
+    for(const td of root.querySelectorAll('td')){
+      const bg = td.getAttribute('bgcolor'); if(!bg) continue; const r = td.getBoundingClientRect();
+      x.fillStyle = bg; x.fillRect(r.left-O.left, r.top-O.top, r.width, r.height);
+      const pat = td.getAttribute('background');
+      if(pat){ const im = await loadImg(pat); if(im){ x.save(); x.beginPath(); x.rect(r.left-O.left, r.top-O.top, r.width, r.height); x.clip(); x.drawImage(im, r.left-O.left, r.top-O.top, im.naturalWidth, im.naturalHeight); x.restore(); } }
+    }
+    for(const el of root.querySelectorAll('img')){
+      const r = el.getBoundingClientRect(); if(!r.width) continue; const im = await loadImg(el.currentSrc || el.src);
+      if(im) x.drawImage(im, r.left-O.left, r.top-O.top, r.width, r.height);
+    }
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    while(walker.nextNode()){
+      const n = walker.currentNode; const t = n.nodeValue.replace(/\s+/g,' '); if(!t.trim()) continue;
+      const cs = getComputedStyle(n.parentElement); const rg = document.createRange(); rg.selectNodeContents(n);
+      const rects = [...rg.getClientRects()]; if(!rects.length) continue;
+      x.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`; x.fillStyle = cs.color; x.textBaseline = 'middle';
+      try { x.letterSpacing = cs.letterSpacing === 'normal' ? '0px' : cs.letterSpacing; } catch(e){}
+      const r = rects[0]; x.fillText(t.trim(), r.left-O.left + (t.startsWith(' ') && t.trim() !== t ? x.measureText(' ').width : 0), r.top-O.top + r.height/2);
+    }
+    return new Promise(res => c.toBlob(res, 'image/png'));
+  }
+  $('dlimg').addEventListener('click', async () => {
+    say('Preparing your image...');
+    try {
+      const blob = await signaturePNG(1); if(!blob) throw new Error('blank');
+      const url = URL.createObjectURL(blob); $('sigpng').src = url; $('imgout').hidden = false;
+      const name = 'DS-Travels-signature-' + ($('name').value.trim() || 'team').replace(/[^A-Za-z0-9]+/g,'-') + '.png';
+      const dl = window.claude && window.claude.use ? await window.claude.use('downloads').catch(() => null) : null;
+      if(dl){
+        try { await dl.save({filename: name, data: blob}); say('Image saved. Check your downloads folder.'); }
+        catch(err){ say(err && err.code === 'declined' ? 'Download cancelled. You can also right-click the image below to save it.' : 'Right-click the image below and choose Save image as.'); }
+      } else {
+        const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+        say('Image ready. Check your downloads folder.');
+      }
+      $('imgout').scrollIntoView({behavior:'smooth', block:'nearest'});
+    } catch(e){ say('Could not create the image. Reload the page and try again.'); }
+  });
+
+  $('copyhtml').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(build()); say('HTML code copied.'); }
+    catch(e){ $('code').focus(); $('code').select(); say('Code selected. Press Ctrl+C (Cmd+C on Mac) to copy it.'); }
+  });
+
+  // Start with Erdoo's approved headshot so the first view shows the finished signature.
+  loadPhoto('assets/sample-headshot.jpg');
+  if(/github\.io$/.test(location.hostname) && !$('photourl').value){ $('photourl').value = host() + 'team-erdoo-oshoma.png'; }
+  render();
+})();
+</script>
