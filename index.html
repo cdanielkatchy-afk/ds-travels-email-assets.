@@ -1,5 +1,7 @@
 <title>DS Travels Signature Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<script>(function(){var t='light';try{t=localStorage.getItem('ds-theme')||'light'}catch(e){}document.documentElement.setAttribute('data-theme',t)})();</script>
+<style>.theme-btn{font:inherit;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;margin-left:auto;white-space:nowrap;flex-shrink:0}@media (max-width:520px){.theme-btn span{display:none}.theme-btn{padding:8px 12px}}.theme-btn:hover{background:rgba(255,255,255,.22)}.theme-btn:focus-visible{outline:3px solid #fff;outline-offset:2px}.theme-btn svg{width:18px;height:18px}</style>
 <style>
 /* Layout: two-pane studio. Form on the left, the live email signature on a white "inbox" sheet on the right; stacks on phones. */
 :root{
@@ -65,7 +67,7 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
-<header class="top"><div class="top-in"><span class="dot" aria-hidden="true"></span><div><h1>DS Travels Signature Studio</h1><p>Fill in your details, check the preview, then copy your signature into Gmail or Outlook.</p></div></div></header>
+<header class="top"><div class="top-in"><span class="dot" aria-hidden="true"></span><div><h1>DS Travels Signature Studio</h1><p>Fill in your details, check the preview, then copy your signature into Gmail or Outlook.</p></div><button type="button" class="theme-btn" id="themeBtn" aria-label="Switch to dark mode"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span>Dark mode</span></button></div></header>
 
 <main class="wrap">
   <section class="panel" aria-labelledby="f-h">
@@ -265,3 +267,4 @@ ${usePhoto ? `<td width="128" valign="top" style="width:128px;padding:0;vertical
   render();
 })();
 </script>
+<script>(function(){var b=document.getElementById('themeBtn');var moon='<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',sun='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';function paint(){var d=document.documentElement.getAttribute('data-theme')==='dark';b.querySelector('svg').innerHTML=d?sun:moon;b.querySelector('span').textContent=d?'Light mode':'Dark mode';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}b.addEventListener('click',function(){var n=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('ds-theme',n)}catch(e){}paint();});paint();})();</script>
