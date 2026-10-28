@@ -1,6 +1,6 @@
 # DS Travels email signature
 
-Team link: https://cdanielkatchy-afk.github.io/ds-travels-email-assets./
+Team link: https://thepolymathconsults-afk.github.io/ds-travels-email-assets./
 
 - `index.html` is the DS Travels Signature Studio (team signature generator).
 - `assets/` holds the public images every signature loads: logos, icons, the panel pattern and framed team photos.

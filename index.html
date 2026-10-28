@@ -115,7 +115,7 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
       <h2>Before you copy</h2>
       <details open><summary>1. Check every detail in the preview</summary><ol><li>Name and title spelt exactly as on your business card.</li><li>Tap each phone number, the email and the social icons in your test email to confirm they open the right place.</li></ol></details>
       <details id="tilebox"><summary>2. Using a photo with Gmail</summary>
-        <ol><li>Gmail removes photos that are not stored online. Right-click your framed photo below and choose <b>Save image as</b>.</li><li>Send it to the brand team. They add it to the DS Travels GitHub folder as <code>team-firstname-lastname.png</code>.</li><li>Paste its link into <b>Hosted photo link</b>: <code>https://raw.githubusercontent.com/cdanielkatchy-afk/ds-travels-email-assets./gh-pages/assets/team-firstname-lastname.png</code>. Outlook and Apple Mail users, and anyone using <b>Download as image</b>, can skip this step.</li></ol>
+        <ol><li>Gmail removes photos that are not stored online. Right-click your framed photo below and choose <b>Save image as</b>.</li><li>Send it to the brand team. They add it to the DS Travels GitHub folder as <code>team-firstname-lastname.png</code>.</li><li>Paste its link into <b>Hosted photo link</b>: <code>https://raw.githubusercontent.com/thepolymathconsults-afk/ds-travels-email-assets./gh-pages/assets/team-firstname-lastname.png</code>. Outlook and Apple Mail users, and anyone using <b>Download as image</b>, can skip this step.</li></ol>
         <div class="tile"><img id="tileimg" alt="Your framed photo, ready to save">Your framed photo</div>
       </details>
     </div>
@@ -154,7 +154,7 @@ textarea{width:100%;min-height:110px;font:12px/1.4 ui-monospace,Menlo,Consolas,m
   const MAPS = 'https://maps.google.com/?q=54+Diya+Street,+Gbagada,+Lagos';
   let withPhoto = true, photoImg = null, tileData = '';
 
-  const PUBLIC_HOST = 'https://raw.githubusercontent.com/cdanielkatchy-afk/ds-travels-email-assets./gh-pages/assets/';
+  const PUBLIC_HOST = 'https://raw.githubusercontent.com/thepolymathconsults-afk/ds-travels-email-assets./gh-pages/assets/';
   const LOCAL_HOST = new URL('assets/', document.baseURI).href;
   const defaultHost = PUBLIC_HOST;
   function host(){ let h = ($('host').value || defaultHost).trim(); if(!h.endsWith('/')) h += '/'; return h; }
