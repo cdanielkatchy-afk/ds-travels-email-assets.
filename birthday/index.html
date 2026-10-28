@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DS Travels Birthday Studio</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+@font-face{font-family:'NHG';src:url('assets/nhg95.otf') format('opentype');font-weight:900}
+@font-face{font-family:'NHG';src:url('assets/nhg65.otf') format('opentype');font-weight:500}
+@font-face{font-family:'NHG';src:url('assets/nhg45.otf') format('opentype');font-weight:300}
+@font-face{font-family:'GV';src:url('assets/GreatVibes.ttf') format('truetype')}
+:root{--navy:#0D3B8C;--red:#D0011A;--bg:#F3F6FB;--card:#FFFFFF;--ink:#0B1F3A;--muted:#5A6478;--line:#D8DFEA}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0A1426;--card:#111E36;--ink:#EEF2F8;--muted:#A3AEC2;--line:#24365A}}
+:root[data-theme="dark"]{--bg:#0A1426;--card:#111E36;--ink:#EEF2F8;--muted:#A3AEC2;--line:#24365A}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'NHG',system-ui,sans-serif}
+header{background:var(--navy);color:#fff;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+header h1{margin:0;font-size:22px;font-weight:900;letter-spacing:-.3px}
+header p{margin:2px 0 0;font-size:14px;font-weight:300;opacity:.85}
+header img{height:40px;width:auto}
+main{max-width:1180px;margin:0 auto;padding:24px 16px 48px;display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:860px){main{grid-template-columns:minmax(0,1fr)}header img{height:30px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+h2{margin:0 0 14px;font-size:15px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--red)}
+label{display:block;font-size:14px;font-weight:500;margin:14px 0 6px}
+select,input[type=text]{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+select:focus,input[type=text]:focus,button:focus-visible,.opt input:focus-visible+span{outline:3px solid var(--red);outline-offset:2px}
+.hint{font-size:13px;color:var(--muted);margin:6px 0 0;font-weight:300}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opt{position:relative;cursor:pointer}
+.opt input{position:absolute;opacity:0}
+.opt span{display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;font-size:14px;font-weight:500}
+.opt input:checked+span{border-color:var(--red)}
+.sw{width:22px;height:22px;border-radius:50%;flex:none;border:1px solid var(--line)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+button{font:inherit;font-size:15px;font-weight:500;min-height:46px;padding:0 18px;border-radius:10px;border:2px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer}
+button.red{background:var(--red);border-color:var(--red)}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+button:disabled{opacity:.6;cursor:wait}
+#photoRow[hidden]{display:none}
+.status{font-size:14px;margin-top:10px;min-height:20px;color:var(--muted)}
+.stage{position:relative;width:100%;aspect-ratio:1080/1528;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(11,31,58,.18);background:#ddd}
+.stage .scaler{position:absolute;top:0;left:0;transform-origin:top left}
+.batch{margin-top:20px}
+textarea{width:100%;min-height:120px;font:inherit;font-size:15px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+#render{position:fixed;left:-99999px;top:0}
+/* flyer */
+.fl{width:1080px;height:1528px;position:relative;overflow:hidden;font-family:'NHG',sans-serif}
+.fl .ab{position:absolute}
+.bal{position:absolute;border-radius:50% 50% 48% 48% / 56% 56% 44% 44%}
+.bR{background:radial-gradient(circle at 34% 30%,#FF6B78 0%,#E3142A 38%,#9E0012 100%)}
+.bW{background:radial-gradient(circle at 34% 30%,#FFFFFF 0%,#F1F3F7 35%,#C8CDD8 100%)}
+.bB{background:radial-gradient(circle at 34% 30%,#6E92D6 0%,#1A4FA8 40%,#0A2A66 100%)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Birthday Studio</h1><p>Branded customer birthday flyers in seconds</p></div>
+  <img src="assets/lockup-white.png" alt="DS Travels">
+</header>
+<main>
+  <section class="card" aria-labelledby="h-details">
+    <h2 id="h-details">1. Celebrant</h2>
+    <label for="l1">First line</label>
+    <input type="text" id="l1" value="Oluwayemisi" autocomplete="off">
+    <label for="l2">Second line</label>
+    <input type="text" id="l2" value="Ode" autocomplete="off">
+    <p class="hint">Names print in capitals. Use the second line for the surname.</p>
+    <label for="age">Landmark birthday</label>
+    <select id="age">
+      <option value="">No, standard flyer</option>
+      <option>30</option><option>40</option><option>50</option><option>60</option><option>70</option><option>80</option>
+    </select>
+    <p class="hint">Choose an age for a 30th to 80th milestone. The age becomes the hero of the flyer.</p>
+
+    <div class="btns">
+      <button class="red" id="dl" type="button">Download PNG</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+
+    <div class="batch">
+      <h2>2. Batch (optional)</h2>
+      <label for="list">One celebrant per line. Separate the two name lines with a comma. For a landmark birthday, add the age as a third value.</label>
+      <textarea id="list" placeholder="Tuedor, Jonathan&#10;Vincent, Ogbodo, 50&#10;Lucy Irene, Vajime"></textarea>
+      <div class="btns"><button id="dlall" type="button">Download all</button></div>
+      <p class="hint">All flyers download together in one zip.</p>
+    </div>
+  </section>
+
+  <section aria-label="Preview">
+    <div class="stage" id="stage"><div class="scaler" id="scaler"></div></div>
+  </section>
+</main>
+<div id="render" aria-hidden="true"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+let photoURL = '';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pts = [[330,170,1,14,20],[420,130,0,6,6],[880,560,1,16,10],[960,610,0,6,6],[300,960,1,12,18],[250,1040,0,5,5],[860,930,1,14,10],[180,880,0,6,6],[380,300,0,4,4],[850,250,0,5,5],[920,480,1,10,14],[120,1200,1,12,8],[60,1100,0,5,5],[990,880,0,4,4],[230,220,1,10,16],[870,1040,0,5,5],[340,880,0,4,4],[400,220,1,8,12],[950,320,0,4,4],[200,300,0,4,4]];
+
+const WISH = {
+  30: 'Thirty looks good on you.<br>Here\u2019s to a decade of bold new destinations.',
+  40: 'Forty and flourishing.<br>May this new chapter take you somewhere unforgettable.',
+  50: 'Fifty years of stories,<br>and the best journeys are still ahead.',
+  60: 'Sixty years of grace.<br>Here\u2019s to new horizons and every reason to explore.',
+  70: 'Seventy years of wisdom and wonder.<br>May every year ahead feel like a homecoming.',
+  80: 'Eighty remarkable years.<br>Thank you for showing us the journey is the joy.'
+};
+function flyer(tpl, a, b, age){
+  age = [30,40,50,60,70,80].includes(+age) ? +age : 0;
+  const white = tpl.endsWith('white'), photo = tpl.startsWith('ph');
+  const bg = white ? '#FFFFFF' : '#0D3B8C', swoosh = white ? '#0D3B8C' : '#D0011A', ink = white ? '#0D3B8C' : '#FFFFFF';
+  const alt = white ? 'bB' : 'bW', str = white ? '#8C9BB5' : '#E8ECF4', dot = white ? '#0D3B8C' : '#FFFFFF';
+  const name = esc(a.trim().toUpperCase()) + (b.trim() ? '<br>' + esc(b.trim().toUpperCase()) : '');
+  let h = `<div class="fl" style="background:${bg}">`;
+  h += `<div class="ab" style="top:-260px;left:-330px;width:760px;height:560px;border-radius:50%;background:${swoosh};transform:rotate(-38deg);opacity:${white?1:.92}"></div>`;
+  h += `<div class="ab" style="top:-230px;left:-300px;width:700px;height:480px;border-radius:50%;border:6px solid ${white?'rgba(208,1,26,.5)':'rgba(255,255,255,.18)'};transform:rotate(-38deg)"></div>`;
+  h += `<div class="ab" style="bottom:-400px;right:-420px;width:760px;height:560px;border-radius:50%;background:${swoosh};transform:rotate(-38deg);opacity:${white?1:.92}"></div>`;
+  h += `<img class="ab" src="assets/${white?'lockup-color':'lockup-white'}.png" alt="" style="top:64px;right:64px;width:270px;height:auto">`;
+  pts.forEach((p,i)=>{ h += `<div class="ab" style="left:${p[0]}px;top:${p[1]}px;width:${p[3]}px;height:${p[4]}px;background:${p[2]?'#D0011A':dot};transform:rotate(${i*37%90}deg);border-radius:${p[3]<7?'50%':'2px'};opacity:.9"></div>`; });
+  if (photo){
+    h += `<div class="ab" style="top:210px;left:290px;width:524px;height:698px;background:#fff;${white?'border:2px solid #E1E6EF;box-shadow:10px 12px 0 rgba(13,59,140,.18)':'box-shadow:10px 12px 0 rgba(0,0,0,.22)'}">`;
+    h += `<div class="ab" style="top:34px;left:34px;right:34px;bottom:34px;background:#C9D3E3;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:500;color:#0D3B8C">`;
+    h += photoURL ? `<img src="${photoURL}" alt="" style="width:100%;height:100%;object-fit:cover">` : 'Add a photo';
+    h += `</div><div class="ab" style="bottom:12px;right:-24px;padding:12px 22px;background:#D0011A;border:4px solid #fff;transform:rotate(-2deg);max-width:500px;text-align:right;font-size:34px;line-height:1.08;font-weight:900;letter-spacing:1px;color:#fff">${name}</div></div>`;
+  } else {
+    const disc = white ? 'background:#0D3B8C;box-shadow:14px 16px 0 #D0011A' : 'background:#fff;box-shadow:10px 12px 0 rgba(0,0,0,.22)';
+    h += `<div class="ab" style="top:250px;left:230px;width:620px;height:620px;border-radius:50%;${disc};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:70px">`;
+    if (age) {
+      h += `<div style="font-family:'GV',cursive;font-size:150px;line-height:1.05;color:#0D3B8C;margin:-10px 0 -36px;transform:rotate(-4deg)">Happy</div>`;
+      h += `<div style="display:flex;align-items:flex-start;font-weight:900;color:#D0011A;line-height:.8"><span style="font-size:250px;letter-spacing:-12px">${age}</span><span style="font-size:60px;letter-spacing:0;margin:10px 0 0 10px">TH</span></div></div>`;
+    } else {
+    h += `<div style="width:90px;height:90px;border-radius:50%;background:${white?'#fff':'#D0011A'}"></div>`;
+    h += `<div style="font-size:30px;font-weight:500;letter-spacing:8px;color:${white?'#D9E6F2':'#0D3B8C'}">CELEBRATING</div>`;
+    h += `<div style="font-size:50px;line-height:1.02;font-weight:900;letter-spacing:-1px;color:${white?'#fff':'#0D3B8C'}">${name}</div></div>`;
+    }
+    if (age) {
+      h += `<div class="ab" style="top:214px;left:194px;width:692px;height:692px;border-radius:50%;border:8px solid #D0011A"></div>`;
+    }
+  }
+  const L = photo ? 'top:470px;left:-90px;transform:scale(.85);transform-origin:top left' : 'top:111px;left:-70px';
+  h += `<div class="ab" style="${L};width:420px;height:760px"><svg width="420" height="760" viewBox="0 0 420 760" style="position:absolute;top:0;left:0"><g stroke="${str}" stroke-width="2" fill="none"><path d="M150 360 Q200 520 250 700"/><path d="M250 300 Q240 500 250 700"/><path d="M360 330 Q300 520 250 700"/><path d="M95 520 Q180 600 250 700"/></g><rect x="240" y="690" width="20" height="34" rx="4" fill="#D0011A"/></svg>`;
+  h += `<div class="bal ${alt}" style="top:0;left:30px;width:230px;height:280px"></div><div class="bal bR" style="top:20px;left:160px;width:230px;height:280px"></div><div class="bal ${alt}" style="top:70px;left:250px;width:230px;height:280px"></div><div class="bal bR" style="top:230px;left:-20px;width:240px;height:300px"></div></div>`;
+  h += `<div class="ab" style="top:470px;right:-120px;width:380px;height:700px;transform:scale(.82);transform-origin:top right"><svg width="380" height="700" viewBox="0 0 380 700" style="position:absolute;top:0;left:0"><g stroke="${str}" stroke-width="2" fill="none"><path d="M140 300 Q200 480 260 680"/><path d="M250 260 Q260 480 260 680"/><path d="M120 470 Q200 560 260 680"/></g></svg>`;
+  h += `<div class="bal bR" style="top:0;left:40px;width:220px;height:270px"></div><div class="bal bR" style="top:10px;left:200px;width:220px;height:270px"></div><div class="bal ${alt}" style="top:180px;left:220px;width:210px;height:260px"></div><div class="bal ${alt}" style="top:210px;left:10px;width:220px;height:270px"></div><div class="bal bR" style="top:250px;left:60px;width:230px;height:280px"></div></div>`;
+  if (!age) h += `<div class="ab" style="top:950px;left:430px;font-family:'GV',cursive;font-size:190px;line-height:1.3;color:${ink};transform:rotate(-4deg)">Happy</div>`;
+  h += `<div class="ab" style="top:${age?960:1110}px;left:150px;transform:rotate(-4deg);padding:18px 34px 26px;background:${white?'#D0011A':'#fff'};border-radius:26px;font-size:168px;line-height:.9;font-weight:900;letter-spacing:-6px;color:${white?'#fff':'#D0011A'}">Birthday</div>`;
+  if (age) h += `<div class="ab" style="top:1185px;left:90px;right:90px;text-align:center;font-size:58px;line-height:1.04;font-weight:900;letter-spacing:-1px;color:#fff">${name}</div>`;
+  h += `<div class="ab" style="top:${age?1350:1345}px;left:${age?100:150}px;right:${age?100:150}px;text-align:center;font-size:${age?32:34}px;line-height:1.38;font-weight:300;color:${ink}">${age ? WISH[age] : 'Wishing you a day filled with love, laughter, and unforgettable memories.'}</div>`;
+  if (white) h += `<img class="ab" src="assets/wave-blue.png" alt="" style="bottom:-40px;left:-10px;width:520px;opacity:.18">`;
+  return h + '</div>';
+}
+
+const tpl = () => 'np-blue';
+function fit(){ const w = $('stage').clientWidth; $('scaler').style.transform = `scale(${w/1080})`; }
+function update(){ $('scaler').innerHTML = flyer(tpl(), $('l1').value, $('l2').value, $('age').value); fit(); }
+
+async function toPNG(a, b, age){
+  await document.fonts.ready;
+  const r = $('render'); r.innerHTML = flyer(tpl(), a, b, age);
+  await Promise.all([...r.querySelectorAll('img')].map(i => i.complete ? 0 : new Promise(res => { i.onload = i.onerror = res; })));
+  const c = await html2canvas(r.firstChild, {scale:2, width:1080, height:1528, backgroundColor:null, useCORS:true, logging:false});
+  r.innerHTML = '';
+  return c;
+}
+let dlCap = null;
+if (window.claude && claude.use) claude.use('downloads').then(d => { dlCap = d; }).catch(() => {});
+const fname = (a, b, age) => ('DS-Travels-Birthday-' + (+age ? age + 'th-' : '') + (a + ' ' + b).trim()).replace(/[^A-Za-z0-9-]+/g,'-') + '.png';
+const blobOf = c => new Promise(res => c.toBlob(res, 'image/png'));
+async function offer(blob, filename){
+  if (dlCap) { await dlCap.save({filename, data: blob}); return; }
+  const u = URL.createObjectURL(blob); const l = document.createElement('a'); l.href = u; l.download = filename;
+  document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+}
+const msg = e => e && e.code === 'declined' ? 'Download cancelled.' : 'Download failed. Please try again.';
+$('dl').onclick = async () => {
+  if (!$('l1').value.trim()) { $('status').textContent = 'Type the celebrant’s name first.'; $('l1').focus(); return; }
+  $('dl').disabled = true; $('status').textContent = 'Preparing your flyer…';
+  try { await offer(await blobOf(await toPNG($('l1').value, $('l2').value, $('age').value)), fname($('l1').value, $('l2').value, $('age').value)); $('status').textContent = 'Saved. 2160 × 3056 PNG.'; }
+  catch(e) { $('status').textContent = msg(e); }
+  $('dl').disabled = false;
+};
+$('dlall').onclick = async () => {
+  const rows = $('list').value.split('\n').map(s => s.trim()).filter(Boolean);
+  if (!rows.length) { $('status').textContent = 'Add at least one name to the batch list.'; $('list').focus(); return; }
+  $('dlall').disabled = true;
+  try {
+    const zip = new JSZip();
+    for (let i = 0; i < rows.length; i++) {
+      const parts = rows[i].split(',').map(x => x.trim()); let age = '';
+      if (parts.length > 1 && /^\d+$/.test(parts[parts.length-1])) age = parts.pop();
+      const a = parts[0] || '', b = parts.slice(1).join(', ');
+      $('status').textContent = `Making ${i+1} of ${rows.length}…`;
+      zip.file(fname(a, b, age), await blobOf(await toPNG(a, b, age)));
+    }
+    $('status').textContent = 'Packing the zip…';
+    await offer(await zip.generateAsync({type:'blob'}), 'DS-Travels-Birthday-Flyers.zip');
+    $('status').textContent = `Saved. ${rows.length} flyers in one zip.`;
+  } catch(e) { $('status').textContent = msg(e); }
+  $('dlall').disabled = false;
+};
+['l1','l2'].forEach(id => $(id).addEventListener('input', update));
+$('age').addEventListener('change', update);
+window.addEventListener('resize', fit);
+document.fonts.ready.then(update); update();
+</script>
+</body>
+</html>
